@@ -1,0 +1,18 @@
+class Node:
+
+	def __init__(self, examples, attributes, parent_examples):
+		self.examples = examples
+		self.attributes = attributes
+		self.parent_examples = examples
+		
+	def __init__(self, parent, examples, attributes, parent_examples):
+		self.parent = parent
+		self.examples = example
+		self.attributes = attributes
+		self.parent_examples = parent_examples
+		
+	def addChildNode(self, newNode):
+		self.children.append(newNode)
+		
+	def getChildren():
+		return self.children	
