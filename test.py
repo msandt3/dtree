@@ -3,6 +3,7 @@ import infogain
 import util
 from Node import *
 import argparse
+import gini
 
 
 tryEx1 = [[1, 1, 0, 1, 1, 1, 1, 0],[1, 1, 1, 0, 1, 1, 1, 1],[1, 1, 0, 0, 0, 0, 0, 1]]
@@ -24,7 +25,8 @@ method = args.method
 """ Begin utility functions for trees """
 def createTree(node):
 	print "Node - ",node," \n",node.toString()
-	children = node.createChildren()
+	#children = node.createChildren()
+	children = node.createChildrenGini()
 
 	for child in children:
 		print "Child - ",child," \n",child.toString()
@@ -52,7 +54,8 @@ def traverseTree(root):
 	children = root.getChildren()
 	for child in children:
 		traverseTree(child)
-
+""" Creates a list of tuples, each corresponding to
+	a an example, label pair """
 def createCounter(examples, labels):
 	newList = []
 	i = 0
@@ -92,14 +95,14 @@ def classifyExample(example, root):
 
 """ END utility functions for trees """
 
-originalDict = createCounter(project4.data2TrainingExamples,project4.data2TrainingLabels)
+originalDict = createCounter(project4.data1TrainingExamples,project4.data1TrainingLabels)
 #debugDict = createCounter(tryEx1,tryLa1)
 #root = Node(debugDict)
 
 #print "Original Values\n",toString(originalDict)
 root = Node(originalDict)
 createTree(root)
-#traverseTree(root)
+traverseTree(root)
 
 #vals = classifyList(project4.data2TestExamples,root)
 #toString(vals)

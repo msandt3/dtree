@@ -1,6 +1,7 @@
 import infogain
 import util
 import random
+import gini
 """ This is a node data structure for a binary implementation of
 	a decision tree """
 class Node:
@@ -97,6 +98,15 @@ class Node:
 		self.attrnum = infogain.detBestAttr(self.counter)
 		#print "Splitting by attribute - ",self.attrnum
 		yesno = infogain.splitByAttr(self.counter, self.attrnum)
+
+		children = []
+		for item in yesno:
+			temp = Node(item,self)
+			self.addChildNode(temp)
+		return self.children
+	def createChildrenGini(self):
+		self.attrnum = gini.detBestAttr(self.counter)
+		yesno = gini.splitByAttr(self.counter, self.attrnum)
 
 		children = []
 		for item in yesno:
