@@ -23,27 +23,36 @@ method = args.method
 """ End command line argument parsing """
 
 """ Begin utility functions for trees """
-def createTree(node):
-	print "Node - ",node," \n",node.toString()
-	#children = node.createChildren()
+def createTreeGini(node):
 	children = node.createChildrenGini()
-
 	for child in children:
 		print "Child - ",child," \n",child.toString()
 		#if examples empty, return parent plurality value
 		if(child.examplesEmpty()):
 			print "Examples empty"
-			#return
 		#if labels empty return child plurality value
 		elif(child.attributesEmpty()):
 			print "Attributes empty"
-			#return
 		#if we can determine yes or no
 		elif(child.isYes() or child.isNo()):
 			print "Yes or no decision"
 			#return
 		else:
-			createTree(child)
+			createTreeGini(child)
+def createTreeInfo(node):
+	children = node.createChildren()
+	for child in children:
+		if(child.examplesEmpty()):
+			print "Examples empty"
+		#if labels empty return child plurality value
+		elif(child.attributesEmpty()):
+			print "Attributes empty"
+		#if we can determine yes or no
+		elif(child.isYes() or child.isNo()):
+			print "Yes or no decision"
+		else:
+			createTreeInfo(child)
+
 
 def traverseTree(root):
 	print "***** NODE ******\n"
@@ -92,35 +101,40 @@ def classifyExample(example, root):
 		else:
 			return classifyExample(example,root.getChildren()[1])
 
+def compareTree(root1, root2):
+	#if we did not split by the same attrnum
+	if root1.getAttrNum() != root2.getAttrNum():
+		return False
+	elif root1.getCounter() != root2.getCounter():
+		return False
+	else:
+		return compareChildren(root1, root2)
+
+def compareChildren(root1, root2):
+	if root1.getAttrNum() != root2.getAttrNum():
+		return False
+	if root2.getCounter() != root2.getCounter():
+		return False
+	#if netheir root has children, and the counters and attrnum are the same
+	#we can return true
+	if not root1.getChildren() and not root2.getChildren():
+		return True
+	return compareChildren(root1.getChildren()[0],root2.getChildren()[0]) and compareChildren(root1.getChildren()[1],root2.getChildren()[1])
+
+
+
 
 """ END utility functions for trees """
+data1Dict = createCounter(project4.data1TrainingExamples,project4.data1TrainingLabels)
+data2Dict = createCounter(project4.data2TrainingExamples,project4.data2TrainingLabels)
 
-originalDict = createCounter(project4.data1TrainingExamples,project4.data1TrainingLabels)
-#debugDict = createCounter(tryEx1,tryLa1)
-#root = Node(debugDict)
+infoRoot = Node(data2Dict)
+giniRoot = Node(data2Dict)
 
-#print "Original Values\n",toString(originalDict)
-root = Node(originalDict)
-createTree(root)
-traverseTree(root)
+createTreeInfo(infoRoot)
+createTreeGini(giniRoot)
 
-#vals = classifyList(project4.data2TestExamples,root)
-#toString(vals)
-"""
-print "Comparison test, roots data - \n",root.toString()
-for child in root.getChildren():
-	print "Child - ",child," data\n"
-	print child.toString()
-"""
-#root = Node(project4.data1TrainingExamples,project4.data1TrainingLabels)
-
-#createTree(root)
-#traverseTree(root)
-#children = root.createChildren()
-#print root.sDebug()
-#print root.getPluralityValue()
-#children = root.getChildren()
-#children[0].sDebug()
+print compareTree(infoRoot,giniRoot)
 
 
 

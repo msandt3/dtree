@@ -106,6 +106,7 @@ class Node:
 		return self.children
 	def createChildrenGini(self):
 		self.attrnum = gini.detBestAttr(self.counter)
+		#print "Attribute selected - ",self.attrnum
 		yesno = gini.splitByAttr(self.counter, self.attrnum)
 
 		children = []

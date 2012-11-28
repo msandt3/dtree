@@ -6,40 +6,41 @@ import copy
 """ Note this implementation is 
 	restricted to binary classification """
 
-
 def giniIndexSet(counter):
 	""" Determines the gini index for a set of binary
 	example/label pairs """
-	fitems = 0
-	titems = 0
-	total = 0
-
+	#print "Computing gini index for set ",counter
+	fitems = 0.0
+	titems = 0.0
+	total = 0.0
+	if not counter:
+		return 1
 	for item in counter:
 		if item[1] == 0:
 			fitems += 1
 		elif item[1] == 1:
 			titems += 1
 		total += 1
-
 	freq0 = math.pow((fitems/total),2)
 	freq1 = math.pow((titems/total),2)
-
 	return 1 - (freq0 + freq1)
 
 def detBestAttr(counter):
-	n = len(counter)
+	""" This method determines the attribute with the lowest
+		gini score. It determines the gini score for the subsets
+		which said yes and no for a particular attribute """
+	n = float(len(counter))
 	minGini = float("inf")
 	minAttr = 0
-	for item in counter:
-		for attr in range(0,len[item]):
-			yes,no = splitByAttr(counter,attr)
-			n1 = len(yes)
-			n2 = len(no)
-
-			if ((n1/n)*giniIndexSet(yes) + (n2/n)*giniIndexSet(no)) < minGini:
-				minGini = ((n1/n)*giniIndexSet(yes) + (n2/n)*giniIndexSet(no))
-				minAttr = attr
-
+	for attr in range(0,len(counter[0][0])):
+		yes,no = splitByAttr(counter,attr)
+		n1 = float(len(yes))
+		n2 = float(len(no))
+		giniScore = ((n1/n)*giniIndexSet(yes) + (n2/n)*giniIndexSet(no))
+		if  giniScore < minGini:
+			minGini = giniScore
+			minAttr = attr
+	return minAttr
 
 def splitByAttr(counter, attr):
 	""" This method splits examples by a particular attribute
@@ -48,10 +49,6 @@ def splitByAttr(counter, attr):
 	"""
 	yes = []
 	no = []
-	#ylabel = []
-	#nlabel = []
-	#print examples
-	#print labels
 	i = 0
 	j = 0
 	for item in counter:
