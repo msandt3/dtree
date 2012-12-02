@@ -128,6 +128,7 @@ data1TrainingLabels = [0,0,0,1,1,1,0,1,0,0,0,0,0,1,0,1,1,1,1,1]
 
 data1TestLabels = [1,0,1,1,0,1,1,1,1,0,1,0,1,1,0,0,0,0,0,0]
 
+
 # Data Set #2: Binary Classification with Binary Attributes
 # Attributes: 10, Binary
 # Labels: T, F
@@ -178,6 +179,8 @@ data2TestExamples = [[1,0,1,1,0,1,1,0,1,1],
 
 data2TrainingLabels = [1,0,1,0,0,0,1,0,1,0,0,1,0,1,0,1,0,1,1,1]
 data2TestLabels = [1,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1]
+
+
 
 # Data Set #3: Binary Classification with Numeric Attributes
 # Attributes: 2, Numeric

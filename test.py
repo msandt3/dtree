@@ -79,12 +79,13 @@ def classifyList(examples, root):
 	retlist = []
 	for example in examples:
 		retval = classifyExample(example,root)
-		retlist.append((example,retval))
+		#retlist.append((example,retval))
+		retlist.append(retval)
 	return retlist
 
 def classifyExample(example, root):
-	print root.toString()
-	print root.attrnum
+	#print root.toString()
+	#print root.attrnum
 	if(root.isYes()):
 		return 1
 	elif(root.isNo()):
@@ -111,15 +112,33 @@ def compareTree(root1, root2):
 		return compareChildren(root1, root2)
 
 def compareChildren(root1, root2):
+	print "Comparing nodes ",root1," and ",root2
 	if root1.getAttrNum() != root2.getAttrNum():
+		print "Nodes were split by separate attribute numbers"
 		return False
 	if root2.getCounter() != root2.getCounter():
+		print "Nodes do not have the same counter"
 		return False
 	#if netheir root has children, and the counters and attrnum are the same
 	#we can return true
 	if not root1.getChildren() and not root2.getChildren():
+		print "Nodes are leaf nodes with no children"
+		print "Node 1 counter \n",root1.toString()
+		print "Node 2 counter \n",root2.toString()
 		return True
+	print "Node 1 counter \n",root1.toString()
+	print "Node 2 counter \n",root2.toString()
+	print "Creating children from (rel) attrnum - ",root1.getAttrNum()
 	return compareChildren(root1.getChildren()[0],root2.getChildren()[0]) and compareChildren(root1.getChildren()[1],root2.getChildren()[1])
+
+def calculatePercentage(calcLabels,givenLabels):
+	numCorrect = 0.0
+	total = 0.0
+	for i in range(0,len(calcLabels)):
+		if calcLabels[i] == givenLabels[i]:
+			numCorrect += 1
+		total += 1
+	return numCorrect/total
 
 
 
@@ -130,11 +149,30 @@ data2Dict = createCounter(project4.data2TrainingExamples,project4.data2TrainingL
 
 infoRoot = Node(data2Dict)
 giniRoot = Node(data2Dict)
+info1Root = Node(data1Dict)
+gini1Root = Node(data1Dict)
 
 createTreeInfo(infoRoot)
 createTreeGini(giniRoot)
+createTreeInfo(info1Root)
+createTreeGini(gini1Root)
+print "Infogain v GiniIndex -- Data Set 2 -- ",compareTree(info1Root,gini1Root)
+info2Class = classifyList(project4.data1TestExamples,info1Root)
+print info2Class
+print "Percentage Correct - ",calculatePercentage(info2Class,project4.data1TestLabels)
+"""
+print "Infogain v GiniIndex -- Data Set 2 -- ",compareTree(infoRoot,giniRoot)
 
-print compareTree(infoRoot,giniRoot)
 
+print "Classifying Infogain implementation -- Data Set 1 --"
+info1Classifications = classifyList(project4.data1TestExamples,info1Root)
+print info1Classifications
+print "Classifying Infogain implementation -- Data Set 2 --"
+info2Classifications = classifyList(project4.data2TestExamples,infoRoot)
+print info2Classifications
+print "Classifying Gini Index implementation -- Data Set 1 --"
+gini1Classifications = classifyList(project4.data1TestExamples,gini1Root)
+print gini1Classifications
+"""
 
 
