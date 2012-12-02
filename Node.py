@@ -5,25 +5,6 @@ import gini
 """ This is a node data structure for a binary implementation of
 	a decision tree """
 class Node:
-	"""
-	def __init__(self, examples, labels):
-		self.examples = examples
-		self.labels = labels
-		self.attrnum = None
-		self.children = []	
-	def __init__(self, parent, examples, labels):
-		self.parent = parent
-		self.examples = example
-		self.labels = labels
-		self.attrnum = None
-		self.children = []
-	def __init__(self, examples, labels, parent=None, attrnum=None):
-		self.parent = parent
-		self.examples = examples
-		self.labels = labels
-		self.attrnum = attrnum
-		self.children = []
-	"""
 	def __init__(self, counter, parent=None, attrnum=None):
 		self.parent = parent
 		self.counter = counter
@@ -38,17 +19,6 @@ class Node:
 		if(attrnum != None):
 			self.name = "Node split at attribute",attrnum
 
-	""" GETTERS AND SETTERS """
-	"""
-	def setlabels(self, labels):
-		self.labels = labels
-	def getlabels(self):
-		return self.labels
-	def getExamples(self):
-		return self.examples
-	def setExamples(self,examples):
-		self.examples = examples
-	"""
 	def getCounter(self):
 		return self.counter
 	def setCounter(self,counter):
@@ -94,7 +64,7 @@ class Node:
 		else:
 			return False
 
-	def createChildren(self):
+	def createChildrenInfo(self):
 		self.attrnum = infogain.detBestAttr(self.counter)
 		#print "Splitting by attribute - ",self.attrnum
 		yesno = infogain.splitByAttr(self.counter, self.attrnum)
@@ -123,9 +93,20 @@ class Node:
 				return False
 		return True
 	def toString(self):
-		for item in self.counter:
-			print item
-	"""
+		if self.parent == None:
+			print "Root node",self
+			print "split by - ",self.attrnum
+			print ""
+		else:
+			print "Node at ",self
+			print "Child of ",self.parent
+			if(self.isYes()):
+				print "Yes decision"
+			elif self.isNo():
+				print "No decision"
+			else:
+				print "split by - ",self.attrnum
+			print ""
 	def getPluralityValue(self):
 		nT = 0
 		nF = 0
@@ -141,7 +122,6 @@ class Node:
 		#not sure about this one
 		else:
 			return random.randint(0,1)
-	"""
 
 	""" DEBUGGING METHODS """
 	def sDebug(self):

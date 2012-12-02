@@ -40,7 +40,7 @@ def createTreeGini(node):
 		else:
 			createTreeGini(child)
 def createTreeInfo(node):
-	children = node.createChildren()
+	children = node.createChildrenInfo()
 	for child in children:
 		if(child.examplesEmpty()):
 			print "Examples empty"
@@ -156,10 +156,10 @@ createTreeInfo(infoRoot)
 createTreeGini(giniRoot)
 createTreeInfo(info1Root)
 createTreeGini(gini1Root)
-print "Infogain v GiniIndex -- Data Set 2 -- ",compareTree(info1Root,gini1Root)
-info2Class = classifyList(project4.data1TestExamples,info1Root)
+print "Infogain v GiniIndex -- Data Set 2 -- ",compareTree(infoRoot,giniRoot)
+info2Class = project4.evaluateBinaryLearner(project4.data2TestExamples,project4.data2TestLabels,giniRoot)
 print info2Class
-print "Percentage Correct - ",calculatePercentage(info2Class,project4.data1TestLabels)
+#print "Percentage Correct - ",calculatePercentage(info2Class,project4.data2TestLabels)
 """
 print "Infogain v GiniIndex -- Data Set 2 -- ",compareTree(infoRoot,giniRoot)
 

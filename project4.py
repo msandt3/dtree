@@ -2,6 +2,9 @@
 import random
 import argparse
 import math
+from Node import *
+import classification
+import tree
 	
 def makeCList(len):
     """
@@ -21,12 +24,7 @@ def makeNList(len,element):
         output.append(element)
     return output
 
-def classifier(instance):
-    #YOUR CODE HERE
-    #REPLACE THIS LINE!
-    return random.randint(0,1)
-
-def evaluateBinaryLearner(classifier,testData,testLabels):    
+def evaluateBinaryLearner(testData,testLabels,root):    
     """
     Tests a classifier with testData and testLabels. Returns a tuple
     containing %incorrect, %positives incorrect, and %negatives
@@ -43,7 +41,7 @@ def evaluateBinaryLearner(classifier,testData,testLabels):
     np = 0.0
     nn = 0.0
     for x,y in zip(testData,testLabels):
-        z = apply(classifier,[x])
+        z = classification.classifyExample(x,root)
         if y:
             np+=1.0
         else:
@@ -657,3 +655,75 @@ data6TestExamples = [[2,14,15,2,36],
   
 data6TrainingLabels= [3,3,3,3,3,3,2,2,2,3,3,3,3,3,2,2,2,1,1,1,1,1,1,1,3,3,3,3,3,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,3,3,3,1,1]
 data6TestLabels = [3,3,3,3,2,2,2,2,2,2,2,1,1,3,3,3,1,1,1,1]
+
+
+
+""" Begin command line argument parsing """
+trainSetLabels = ["Training Set 1","Training Set 2"]
+testSetLabels = ["Testing Set 1","Testing Set 2"]
+trainIndex = 0
+testIndex = 0
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('testing', choices=['test1','test2'], help='data set to run testing on')
+parser.add_argument('training', choices=['train1','train2'], help='data set to run training on')
+parser.add_argument('method', choices=['infogain','gini'], help='select which learning method to use')
+
+
+args = parser.parse_args()
+testNum = args.testing
+trainNum = args.training
+method = args.method
+
+
+#set up data set for training
+if trainNum == "train1":
+    dataSet = tree.createCounter(data1TrainingExamples,data1TrainingLabels)
+    trainData = data1TrainingExamples
+    trainLabels = data1TrainingLabels
+    trainIndex = 0
+
+elif trainNum == "train2":
+    dataSet = tree.createCounter(data2TrainingExamples,data2TrainingLabels)
+    trainData = data2TrainingExamples
+    trainLabels = data2TrainingLabels
+    trainIndex = 1
+
+root = Node(dataSet)
+#create tree from data set
+if method == "infogain":
+    tree.createTreeInfo(root)
+elif method == "gini":
+    tree.createTreeGini(root)
+
+if testNum == "test1":
+    testData = data1TestExamples
+    testLabel = data1TestLabels
+    testIndex = 0
+elif testNum == "test2":
+    testData = data2TestExamples
+    testLabel = data2TestLabels
+    testIndex = 1
+""" End command line argument parsing """
+
+print "                 OUTPUT              "
+print "Running decision tree on data set - ",testSetLabels[testIndex]
+print "Tree built from data set/labels - ",trainSetLabels[trainIndex]
+print "Using method - ",method,"\n"
+
+print "Results for running tree on training examples"
+
+results = evaluateBinaryLearner(trainData,trainLabels,root)
+print "Correct - ",results[0]
+print "False Positives - ",results[1]
+print "False Negatives - ",results[2],"\n"
+
+print "Results for running tree on testing examples"
+
+results = evaluateBinaryLearner(testData,testLabel,root)
+print "Correct - ",results[0]
+print "False Positives - ",results[1]
+print "False Negatives - ",results[2]
+
+
